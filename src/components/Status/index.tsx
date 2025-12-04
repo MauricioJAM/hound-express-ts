@@ -2,15 +2,18 @@ import { StatusSection, StatusStatistics } from "./style";
 import recibido from '../../assets/img/received_logo-black.png'
 import enCamino from '../../assets/img/inWay-black.png'
 import lista from '../../assets/img/list-black.png'
-interface Props {
-  stats: {
-    total: number;
-    inTransit: number;
-    delivered: number;
-  };
-}
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store/store";
 
-const Status = ({ stats }: Props) => {
+
+
+const Status = () => {
+  const guides = useSelector((state: RootState) => state.guides.guides);
+
+  const total = guides.length;
+  const inTransit = guides.filter(g => g.status === "En transito").length;
+  const delivered = guides.filter(g => g.status === "Entregado").length;
+
   return (
     <StatusSection>
       <h1 className="status__title">Estado general</h1>
@@ -21,7 +24,7 @@ const Status = ({ stats }: Props) => {
             <i><img src={lista} alt="" /></i>
           </div>
           <p>Número total de guias:</p>
-          <h5 id="total__guides">{stats.total}</h5>
+          <h5 id="total__guides">{total}</h5>
         </div>
 
         <div className="status__statistics--item">
@@ -29,7 +32,7 @@ const Status = ({ stats }: Props) => {
             <i><img src={enCamino} alt="" /></i>
           </div>
           <p>Guía en transito:</p>
-          <h5 id="inTransit__guides">{stats.inTransit}</h5>
+          <h5 id="inTransit__guides">{inTransit}</h5>
         </div>
 
         <div className="status__statistics--item">
@@ -37,7 +40,7 @@ const Status = ({ stats }: Props) => {
             <i><img src={recibido} alt="" /></i>
           </div>
           <p>Guías entregadas:</p>
-          <h5 id="delivered__guides">{stats.delivered}</h5>
+          <h5 id="delivered__guides">{delivered}</h5>
         </div>
       </StatusStatistics>
     </StatusSection>

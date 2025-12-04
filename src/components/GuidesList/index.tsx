@@ -1,15 +1,15 @@
-import type { Guide } from "../../hooks/useGuides";
+
 import { ListSection, TableButton } from "./style";
 import update from '../../assets/img/update-black.png';
 import history from '../../assets/img/history--black.png'
+import { useDispatch } from "react-redux";
+import { showHistory, updateStatus } from "../../store/guidesSlice";
+import { useAppSelector } from "../../hooks";
 
-interface Props {
-  guides: Guide[];
-  updateStatus: (guideNumber: string) => void;
-  showHistory: (guideNumber: string) => void;
-}
+const GuidesList = () => {
+  const dispatch = useDispatch();
+  const guides = useAppSelector((state) => state.guides.guides);
 
-const GuidesList = ({ guides, updateStatus, showHistory }: Props) => {
   return (
     <ListSection>
       <h1 className="guides__title">Lista de guías</h1>
@@ -26,7 +26,6 @@ const GuidesList = ({ guides, updateStatus, showHistory }: Props) => {
             <th>Historial</th>
           </tr>
         </thead>
-
         <tbody>
           {guides.map((g) => (
             <tr key={g.guideNumber}>
@@ -35,19 +34,17 @@ const GuidesList = ({ guides, updateStatus, showHistory }: Props) => {
               <td id="columnOrig">{g.origen}</td>
               <td id="columnDest">{g.destination}</td>
               <td id="columnDate">{g.formattedDate}</td>
-
               <td id="columnUpd">
                 <TableButton>
-                  <i className="logo--table" onClick={() => updateStatus(g.guideNumber)}>
-                    <img src={update} alt="actualizar" />
-                  </i>
+                    <i onClick={() => dispatch(updateStatus(g.guideNumber))}>
+                      <img src={update} />
+                    </i>
                 </TableButton>
               </td>
-
               <td id="columnHist">
                 <TableButton>
-                  <i className="logo--table" onClick={() => showHistory(g.guideNumber)}>
-                    <img src={history} alt="historial" />
+                  <i onClick={() => dispatch(showHistory(g.guideNumber))}>
+                    <img src={history} />
                   </i>
                 </TableButton>
               </td>
@@ -60,3 +57,4 @@ const GuidesList = ({ guides, updateStatus, showHistory }: Props) => {
 };
 
 export default GuidesList;
+

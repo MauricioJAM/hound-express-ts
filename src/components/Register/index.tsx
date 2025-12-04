@@ -1,24 +1,25 @@
-import type { Guide } from "../../hooks/useGuides";
+
+import { useDispatch, useSelector } from "react-redux";
+import { addGuide } from "../../store/guidesSlice";
+import type { RootState } from "../../store/store";
 import { RegisterForm, RegisterSection } from "./style";
 
-interface Props {
-  addGuide: (guide: Guide) => void;
-  guides: Guide[];
-}
+const Register = () => {
+  const dispatch = useDispatch();
+  const guides = useSelector((state: RootState) => state.guides.guides);
 
-const Register = ({ addGuide, guides }: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
-    const guideNumber = (form.guideNumber.value as string).trim();
+    const guideNumber = form.guideNumber.value.trim();
     const origen = form.origen.value.trim();
     const destination = form.destination.value.trim();
     const addresses = form.addresses.value.trim();
     const status = "Pendiente";
 
     if (Number(guideNumber) <= 0) {
-      alert("El número de guía es inválido");
+      alert("Número de guía inválido.");
       return;
     }
 
@@ -30,7 +31,7 @@ const Register = ({ addGuide, guides }: Props) => {
 
     const date = new Date().toLocaleString();
 
-    const newGuide: Guide = {
+    const newGuide = {
       guideNumber,
       origen,
       destination,
@@ -40,8 +41,8 @@ const Register = ({ addGuide, guides }: Props) => {
       history: [{ status, date }],
     };
 
-    addGuide(newGuide);
-    alert("Registro de guía exitoso.");
+    dispatch(addGuide(newGuide));
+    alert("Guía registrada.");
     form.reset();
   };
 
@@ -78,3 +79,6 @@ const Register = ({ addGuide, guides }: Props) => {
 };
 
 export default Register;
+
+
+ 
